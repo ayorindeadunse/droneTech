@@ -1,7 +1,15 @@
 package com.example.droneTech.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
 public class Medication {
-    private Long Id; // identity
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id; // identity
     private String name;
     private int medicineWeight;
     private String code;
