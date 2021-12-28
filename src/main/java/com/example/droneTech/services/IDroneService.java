@@ -6,10 +6,10 @@ import com.example.droneTech.models.Medication;
 
 import java.util.List;
 
-public interface IDroneServive {
+public interface IDroneService {
 
     String registerDrone(Drone drone); //get drone serialNumber
-    String getDroneState(String serialNumber);//get the drone state
+    String getDroneState(String serialNumber);//get the drone state. Use a switchcase method to return the droneState
     int getBatteryLevel(String serialNumber); //get the battery level for a particular drone from event log.
     List<String> getAvailableDrones(); //get the list of available drones from the event log. The serial numbers will be added to the ArrayList object.
     String LoadDrone(LoadDrone loadDrone); //return the drone state after loading the drone with medication.
