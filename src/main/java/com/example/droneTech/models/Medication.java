@@ -1,11 +1,9 @@
 package com.example.droneTech.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "medications")
 public class Medication {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
