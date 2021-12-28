@@ -1,13 +1,13 @@
 package com.example.droneTech.models;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
+@Entity
+@Table(name = "medications")
 public class MedicationRegister {
-    @javax.persistence.Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; // primary key
     private Long MedicationId; //make this a unique field
     private Date createdDate;

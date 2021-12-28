@@ -1,15 +1,13 @@
 package com.example.droneTech.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "drones")
 public class Drone {
     // Declare drone properties
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //auto increment. Identity column.
     private String serialNumber;
     private DroneModel droneModel;

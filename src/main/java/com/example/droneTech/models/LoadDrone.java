@@ -1,11 +1,19 @@
 package com.example.droneTech.models;
 
+import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Entity
+@Table(name = "loadedDrones")
 public class LoadDrone {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String serialNumber;
+    @Transient
     private List<Long> medicationId;
     private DroneState droneState;
     private Date dateCreated;
