@@ -22,10 +22,6 @@ public class DroneRegistrationRequest {
     private String state;
 
 
-
-    public DroneRegistrationRequest() {
-    }
-
     // Create unique serial number
     public static String createSerialNumber()
     {
