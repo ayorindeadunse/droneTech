@@ -3,6 +3,10 @@ package com.example.droneTech.RequestsAndResponses;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+
+//import static com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat.UUID;
+import java.util.UUID;
+
 public class DroneRegistrationRequest {
     @NotBlank
     @Size(max = 100)
