@@ -11,8 +11,6 @@ public class DroneRegistrationRequest {
     @Size(max = 500)
     private int droneWeight;
 
-    private static AtomicLong idCounter = new AtomicLong();
-
     @NotBlank
     private int batteryCapacity;
 
@@ -27,7 +25,8 @@ public class DroneRegistrationRequest {
     // Create unique serial number
     public static String createSerialNumber()
     {
-        return String.valueOf(idCounter.getAndIncrement());
+        String uniqueID = UUID.randomUUID().toString();
+        return uniqueID;
     }
 
     public String getSerialNumber() {

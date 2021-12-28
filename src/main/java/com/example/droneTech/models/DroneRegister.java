@@ -12,15 +12,15 @@ public class DroneRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id; // primary key
-    private Long DroneId; //make this a unique field
+    private String serialNumber; //make this a unique field
     private Date createdDate;
     private Date modifiedDate;
 
     public DroneRegister() {
     }
 
-    public DroneRegister(Long droneId, Date createdDate, Date modifiedDate) {
-        DroneId = droneId;
+    public DroneRegister(String serialNumber, Date createdDate, Date modifiedDate) {
+        serialNumber = serialNumber;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
