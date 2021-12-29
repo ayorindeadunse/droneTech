@@ -45,11 +45,16 @@ public class DroneService implements IDroneService{
     public List<String> getAvailableDrones()
     {
        // List<String> availableDrones = new ArrayList<String>();
+
         // call method from DronesRepository interface to get available drones from  event log and store in availableDrones;
         //return availableDrones.
+
         Query query = em.createNativeQuery("'select serialNumber s from EventLog s where s.serialNumber = :serialNumber and s.droneState = 'IDLE''");
         List<String> availableDrones = query.getResultList();
+
         return availableDrones;
+
+
     }
 
     public String LoadDrone(LoadDrone loadDrone)
