@@ -44,11 +44,11 @@ public class DroneService implements IDroneService{
 
     public List<String> getAvailableDrones()
     {
-        List<String> availableDrones = new ArrayList<String>();
-
+       // List<String> availableDrones = new ArrayList<String>();
         // call method from DronesRepository interface to get available drones from  event log and store in availableDrones;
         //return availableDrones.
-
+        Query query = em.createNativeQuery("'select serialNumber s from EventLog s where s.serialNumber = :serialNumber and s.droneState = 'IDLE''");
+        List<String> availableDrones = query.getResultList();
         return availableDrones;
     }
 
@@ -59,9 +59,9 @@ public class DroneService implements IDroneService{
 
     public List<String> getLoadedMedication(String serialNumber)
     {
-      //  List<String> loadedMedication = new ArrayList<String>();
-       Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.serialNumber = :serialNumber");
-       List<String> loadedMedication = query.getResultList();
+        List<String> loadedMedication = new ArrayList<String>();
+     //  Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.serialNumber = :serialNumber");
+     //  List<String> loadedMedication = query.getResultList();
         // call method from DronesRepository interface to get a list of loaded medication from  LoadedDrone table and store in loadedMedication;
         //return loadedMedication.
         return loadedMedication;
