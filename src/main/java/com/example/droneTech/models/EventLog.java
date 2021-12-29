@@ -12,7 +12,7 @@ public class EventLog {
     @Column(name = "serialNumber")
     private String serialNumber;
     @Column(name = "droneState")
-    private String droneState;
+    private DroneState droneState;
     @Column(name = "batteryLevel")
     private int batteryLevel;
     @Column(name = "dateCreated")
@@ -23,7 +23,7 @@ public class EventLog {
     public EventLog() {
     }
 
-    public EventLog(String serialNumber, String droneState, int batteryLevel, Date dateCreated,Date dateModified) {
+    public EventLog(String serialNumber, DroneState droneState, int batteryLevel, Date dateCreated,Date dateModified) {
         this.serialNumber = serialNumber;
         this.droneState = droneState;
         this.batteryLevel = batteryLevel;
@@ -39,11 +39,11 @@ public class EventLog {
         this.serialNumber = serialNumber;
     }
 
-    public String getDroneState() {
+    public DroneState getDroneState() {
         return droneState;
     }
 
-    public void setDroneState(String droneState) {
+    public void setDroneState(DroneState droneState) {
         this.droneState = droneState;
     }
 

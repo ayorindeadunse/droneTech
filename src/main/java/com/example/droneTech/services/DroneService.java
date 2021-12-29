@@ -1,15 +1,12 @@
 package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
-import com.example.droneTech.models.Drone;
-import com.example.droneTech.models.DroneRegister;
-import com.example.droneTech.models.LoadDrone;
-import com.example.droneTech.models.Medication;
+import com.example.droneTech.models.*;
 import com.example.droneTech.repositories.DroneRegisterRepository;
 import com.example.droneTech.repositories.DroneRepository;
+import com.example.droneTech.repositories.EventLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
@@ -25,10 +22,13 @@ public class DroneService implements IDroneService{
     @Autowired
     private DroneRepository droneRepository;
     private DroneRegisterRepository droneRegisterRepository;
+    private EventLogRepository eventLogRepository;
 
-    public DroneService(DroneRepository droneRepository,DroneRegisterRepository droneRegisterRepository) {
+    public DroneService(DroneRepository droneRepository,DroneRegisterRepository droneRegisterRepository,
+                        EventLogRepository eventLogRepository) {
         this.droneRepository = droneRepository;
         this.droneRegisterRepository =  droneRegisterRepository;
+        this.eventLogRepository = eventLogRepository;
     }
 
     public Drone registerDrone(DroneRegistrationRequest drone) {
@@ -55,8 +55,6 @@ public class DroneService implements IDroneService{
 
             d1 = droneRepository.save(us);
             if ( d1.getSerialNumber() != null) {
-                //  return us.getId();
-                //   LOGGER.info("User created successfully " + usadd);
 
                 /* save in droneregister table */
                 dr = new DroneRegister();
@@ -68,6 +66,11 @@ public class DroneService implements IDroneService{
 
                 if (dr1.getId() > 0) {
                     System.out.println("Drone successfully registered");
+
+                    //log state in event log
+                    EventLog ev = new EventLog(d1.getSerialNumber(),d1.getDroneState()
+                            ,d1.getBatteryCapacity(),new Date(),new Date());
+                    eventLogRepository.save(ev);
                 }
             }
         }
