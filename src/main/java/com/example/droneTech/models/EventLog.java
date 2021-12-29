@@ -9,10 +9,15 @@ public class EventLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+    @Column(name = "serialNumber")
     private String serialNumber;
+    @Column(name = "droneState")
     private String droneState;
+    @Column(name = "batteryLevel")
     private int batteryLevel;
+    @Column(name = "dateCreated")
     private Date dateCreated;
+    @Column(name = "dateModified")
     private Date dateModified;
 
     public EventLog() {
@@ -48,5 +53,21 @@ public class EventLog {
 
     public void setBatteryLevel(int batteryLevel) {
         this.batteryLevel = batteryLevel;
+    }
+
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateModified() {
+        return dateModified;
+    }
+
+    public void setDateModified(Date dateModified) {
+        this.dateModified = dateModified;
     }
 }
