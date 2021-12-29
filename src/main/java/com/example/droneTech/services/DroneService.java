@@ -83,6 +83,18 @@ public class DroneService implements IDroneService{
     // get drone state
     public String getDroneState(String serialNumber)
     {
+        // query the Event log for the drone state.
+        try
+        {
+            Query query = em.createNativeQuery("select s.droneState from EventLog s where s.serialNumber = :serialNumber order by s.dateCreated desc ")
+                    .setParameter("serialNumber", serialNumber);
+
+            List<Object[]> resultList = query.getResultList();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return "Drone state is:";
     }
 
@@ -94,24 +106,30 @@ public class DroneService implements IDroneService{
 
     public List<String> getAvailableDrones()
     {
-        List<String> availableDrones = new ArrayList<String>();
+        List<String> availableDrones = new ArrayList<>();
+        try
+        {
+            availableDrones = droneRepository.getAllAvailableDrones();
+        }
+       catch(Exception e)
+       {
+           e.printStackTrace();
+       }
         // call method from DronesRepository interface to get available drones from  event log and store in availableDrones;
         //return availableDrones.
-        try {
-            /** keep tabs to see if this query will run */
-            Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.droneState = 'IDLE'");
+       /* try
+        {
+            Query query = em.createNativeQuery("select s.serialNumber from EventLog s where s.droneState = 'IDLE'");
             List<Object[]> resultList = query.getResultList();
-           // List<String> availableDrones = new ArrayList<String>();
             for (Object[] r : resultList) {
                 // add to the availableDrones variable to send back to client
                 availableDrones.add((String) r[0]); // check this
             }
-          //  return availableDrones;
         }
         catch(Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
         return availableDrones;
     }
 
@@ -122,28 +140,31 @@ public class DroneService implements IDroneService{
 
     public List<String> getLoadedMedication(String serialNumber)
     {
-        List<String> loadedMedication = new ArrayList<String>();
-        try {
-            //  Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.serialNumber = :serialNumber");
-            //  List<String> loadedMedication = query.getResultList();
+        List<String> loadedMedication = new ArrayList<>();
+        try
+        {
+            loadedMedication = droneRepository.getDroneAvailableMedication(serialNumber);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+       /* try {
             // call method from DronesRepository interface to get a list of loaded medication from  LoadedDrone table and store in loadedMedication;
             //return loadedMedication.
 
-            Query query = em.createNativeQuery("select MedicationId m from loadedDrones s where s.serialNumber :serialNumber").setParameter("serialNumber", serialNumber);
-
-            //  List<String> availableDrones = query.getResultList();
+            Query query = em.createNativeQuery("select m.MedicationId from loadedDrones m where m.serialNumber = :serialNumber").setParameter("serialNumber", serialNumber);
             List<Object[]> resultList = query.getResultList();
 
             for (Object[] r : resultList) {
                 // add to the availableDrones variable to send back to client
                 loadedMedication.add((String) r[0]); // check this, might need to deserialize to get individual medication items.
             }
-           // return loadedMedication;
         }
         catch(Exception e)
         {
             e.printStackTrace();
-        }
+        }*/
         return loadedMedication;
     }
 
