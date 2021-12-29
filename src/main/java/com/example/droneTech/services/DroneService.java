@@ -1,8 +1,11 @@
 package com.example.droneTech.services;
 
+import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
 import com.example.droneTech.models.Drone;
+import com.example.droneTech.models.DroneRegister;
 import com.example.droneTech.models.LoadDrone;
 import com.example.droneTech.models.Medication;
+import com.example.droneTech.repositories.DroneRegisterRepository;
 import com.example.droneTech.repositories.DroneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,16 +24,59 @@ public class DroneService implements IDroneService{
     private EntityManager em;
     @Autowired
     private DroneRepository droneRepository;
+    private DroneRegisterRepository droneRegisterRepository;
 
-    public DroneService(DroneRepository droneRepository) {
+    public DroneService(DroneRepository droneRepository,DroneRegisterRepository droneRegisterRepository) {
         this.droneRepository = droneRepository;
+        this.droneRegisterRepository =  droneRegisterRepository;
     }
 
-    public String registerDrone(Drone drone)
-    {
-        return "IDLE";
-    }
+    public Drone registerDrone(DroneRegistrationRequest drone) {
+/****To do
+ *
+ * check if the drone exists
+ */
+        Drone d,us,d1= null;
+        DroneRegister dr = null;
+        try {
+            //check if the drone already exists.
+            // d = droneRepository.checkDroneExists(drone.getSerialNumber());
+         /*   if (d != null) // user already exists
+            {
+              //  LOGGER.info("This Drone is already registered " + user.getEmail());
+               // throw droneNotFoundException (create it as well)
+            }*/
+            us = new Drone();
+            us.setSerialNumber(drone.getSerialNumber());
+            us.setDroneModel(drone.getDroneModel());
+            us.setDroneWeight(drone.getDroneWeight());
+            us.setBatteryCapacity(drone.getBatteryCapacity());
+            us.setDroneState(drone.getState());
 
+            d1 = droneRepository.save(us);
+            if ( d1.getSerialNumber() != null) {
+                //  return us.getId();
+                //   LOGGER.info("User created successfully " + usadd);
+
+                /* save in droneregister table */
+                dr = new DroneRegister();
+                dr.setSerialNumber(d1.getSerialNumber());
+                dr.setCreatedDate(new Date());
+                dr.setModifiedDate(new Date());
+
+                DroneRegister dr1 = droneRegisterRepository.save(dr);
+
+                if (dr1.getId() > 0) {
+                    System.out.println("Drone successfully registered");
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return d1;
+    }
     // get drone state
     public String getDroneState(String serialNumber)
     {
@@ -44,17 +91,25 @@ public class DroneService implements IDroneService{
 
     public List<String> getAvailableDrones()
     {
-       // List<String> availableDrones = new ArrayList<String>();
-
+        List<String> availableDrones = new ArrayList<String>();
         // call method from DronesRepository interface to get available drones from  event log and store in availableDrones;
         //return availableDrones.
-
-        Query query = em.createNativeQuery("'select serialNumber s from EventLog s where s.serialNumber = :serialNumber and s.droneState = 'IDLE''");
-        List<String> availableDrones = query.getResultList();
-
+        try {
+            /** keep tabs to see if this query will run */
+            Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.droneState = 'IDLE'");
+            List<Object[]> resultList = query.getResultList();
+           // List<String> availableDrones = new ArrayList<String>();
+            for (Object[] r : resultList) {
+                // add to the availableDrones variable to send back to client
+                availableDrones.add((String) r[0]); // check this
+            }
+          //  return availableDrones;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return availableDrones;
-
-
     }
 
     public String LoadDrone(LoadDrone loadDrone)
@@ -65,10 +120,27 @@ public class DroneService implements IDroneService{
     public List<String> getLoadedMedication(String serialNumber)
     {
         List<String> loadedMedication = new ArrayList<String>();
-     //  Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.serialNumber = :serialNumber");
-     //  List<String> loadedMedication = query.getResultList();
-        // call method from DronesRepository interface to get a list of loaded medication from  LoadedDrone table and store in loadedMedication;
-        //return loadedMedication.
+        try {
+            //  Query query = em.createNativeQuery("select serialNumber s from EventLog s where s.serialNumber = :serialNumber");
+            //  List<String> loadedMedication = query.getResultList();
+            // call method from DronesRepository interface to get a list of loaded medication from  LoadedDrone table and store in loadedMedication;
+            //return loadedMedication.
+
+            Query query = em.createNativeQuery("select MedicationId m from loadedDrones s where s.serialNumber :serialNumber").setParameter("serialNumber", serialNumber);
+
+            //  List<String> availableDrones = query.getResultList();
+            List<Object[]> resultList = query.getResultList();
+
+            for (Object[] r : resultList) {
+                // add to the availableDrones variable to send back to client
+                loadedMedication.add((String) r[0]); // check this, might need to deserialize to get individual medication items.
+            }
+           // return loadedMedication;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return loadedMedication;
     }
 

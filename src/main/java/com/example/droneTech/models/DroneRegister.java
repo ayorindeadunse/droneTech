@@ -18,8 +18,37 @@ public class DroneRegister {
     }
 
     public DroneRegister(String serialNumber, Date createdDate, Date modifiedDate) {
-        serialNumber = serialNumber;
+        this.serialNumber = serialNumber;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
+
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(Date createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public Date getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public void setModifiedDate(Date modifiedDate) {
+        this.modifiedDate = modifiedDate;
+    }
+
+    public Long getId() {
+        return Id;
+    }
+
 }

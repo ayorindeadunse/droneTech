@@ -12,7 +12,7 @@ public class Drone {
     private String serialNumber;
     private DroneModel droneModel;
     private int droneWeight;
-    private Double batteryCapacity;
+    private int batteryCapacity;
     private DroneState droneState;
 
     // add constructor
@@ -20,7 +20,7 @@ public class Drone {
     public Drone() {
     }
 
-    public Drone(String serialNumber, DroneModel droneModel, int droneWeight, Double batteryCapacity, DroneState droneState) {
+    public Drone(String serialNumber, DroneModel droneModel, int droneWeight, int batteryCapacity, DroneState droneState) {
         this.serialNumber = serialNumber;
         this.droneModel = droneModel;
         this.droneWeight = droneWeight;
@@ -52,11 +52,11 @@ public class Drone {
         this.droneWeight = droneWeight;
     }
 
-    public Double getBatteryCapacity() {
+    public int getBatteryCapacity() {
         return batteryCapacity;
     }
 
-    public void setBatteryCapacity(Double batteryCapacity) {
+    public void setBatteryCapacity(int batteryCapacity) {
         this.batteryCapacity = batteryCapacity;
     }
 
@@ -66,5 +66,9 @@ public class Drone {
 
     public void setDroneState(DroneState droneState) {
         this.droneState = droneState;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

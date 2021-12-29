@@ -11,6 +11,7 @@ public class Medication {
     private String name;
     private int medicineWeight;
     private String code;
+    private String medicationSerialNumber;
     private byte[] medicationImage;
 
     public Medication() {

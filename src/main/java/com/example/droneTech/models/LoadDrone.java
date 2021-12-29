@@ -12,11 +12,16 @@ public class LoadDrone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "serialNumber")
     private String serialNumber;
     @Transient
+    @Column(name = "medicationId")
     private List<Long> medicationId;
+    @Column(name = "droneState")
     private DroneState droneState;
+    @Column(name = "dateCreated")
     private Date dateCreated;
+    @Column(name = "dateModified")
     private Date dateModified;
 
     public LoadDrone() {
@@ -71,4 +76,6 @@ public class LoadDrone {
     public void setMedicationId(List<Long> medicationId) {
         this.medicationId = medicationId;
     }
+
+    //MediationId should be a string
 }
