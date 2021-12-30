@@ -1,9 +1,7 @@
 package com.example.droneTech.models;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "loadeddrones")
@@ -12,11 +10,10 @@ public class LoadDrone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "serialNumber")
+    @Column(name = "serialNumber",unique = true)
     private String serialNumber;
-    @Transient
-    @Column(name = "medicationId")
-    private List<Long> medicationId;
+    @Column(name = "medicinecode",unique = true)
+    private String medicinecode;
     @Column(name = "droneState")
     private DroneState droneState;
     @Column(name = "dateCreated")
@@ -27,15 +24,13 @@ public class LoadDrone {
     public LoadDrone() {
     }
 
-    public LoadDrone(String serialNumber,List<Long> medicationId, DroneState droneState, Date dateCreated, Date dateModified) {
+    public LoadDrone(String serialNumber,String medicinecode, DroneState droneState, Date dateCreated, Date dateModified) {
         this.serialNumber = serialNumber;
         this.droneState = droneState;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
-        this.medicationId = medicationId;
+        this.medicinecode = medicinecode;
     }
-
-
 
     public String getSerialNumber() {
         return serialNumber;
@@ -69,13 +64,12 @@ public class LoadDrone {
         this.dateModified = dateModified;
     }
 
-    public List<Long> getMedicationId() {
-        return medicationId;
+    public String getMedicationCode() {
+        return medicinecode;
     }
 
-    public void setMedicationId(List<Long> medicationId) {
-        this.medicationId = medicationId;
+    public void setMedicationCode(String medicinecode) {
+        this.medicinecode = medicinecode;
     }
 
-    //MediationId should be a string
 }

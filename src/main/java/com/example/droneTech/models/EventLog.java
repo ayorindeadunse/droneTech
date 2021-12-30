@@ -9,7 +9,7 @@ public class EventLog {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
-    @Column(name = "serialNumber")
+    @Column(name = "serialNumber",unique = true)
     private String serialNumber;
     @Column(name = "droneState")
     private DroneState droneState;

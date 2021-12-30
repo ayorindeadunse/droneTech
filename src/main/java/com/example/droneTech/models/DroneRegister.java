@@ -10,8 +10,11 @@ public class DroneRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id; // primary key
+    @Column(name = "serialNumber",unique = true)
     private String serialNumber; //make this a unique field
+    @Column(name = "createdDate")
     private Date createdDate;
+    @Column(name = "serialNumber")
     private Date modifiedDate;
 
     public DroneRegister() {

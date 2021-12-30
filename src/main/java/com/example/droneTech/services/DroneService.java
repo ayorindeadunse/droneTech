@@ -7,8 +7,6 @@ import com.example.droneTech.repositories.DroneRepository;
 import com.example.droneTech.repositories.EventLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,7 +16,6 @@ import java.util.List;
 @Transactional
 public class DroneService implements IDroneService{
 
-    private EntityManager em;
     @Autowired
     private DroneRepository droneRepository;
     private DroneRegisterRepository droneRegisterRepository;
@@ -83,8 +80,18 @@ public class DroneService implements IDroneService{
     // get drone state
     public String getDroneState(String serialNumber)
     {
-        // query the Event log for the drone state.
+        String droneState = "";
         try
+        {
+           droneState = droneRepository.getCurrentDroneState(serialNumber);
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        // query the Event log for the drone state.
+      /*  try
         {
             Query query = em.createNativeQuery("select s.droneState from EventLog s where s.serialNumber = :serialNumber order by s.dateCreated desc ")
                     .setParameter("serialNumber", serialNumber);
@@ -95,13 +102,23 @@ public class DroneService implements IDroneService{
         {
             e.printStackTrace();
         }
-        return "Drone state is:";
+        return "Drone state is:";*/
+        return droneState;
     }
 
     //get battery level
     public int getBatteryLevel(String serialNumber)
     {
-        return 1;
+        int batteryLevel = 0;
+        try
+        {
+            batteryLevel = droneRepository.getDroneBatteryLevel(serialNumber);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return batteryLevel;
     }
 
     public List<String> getAvailableDrones()
@@ -135,7 +152,20 @@ public class DroneService implements IDroneService{
 
     public String LoadDrone(LoadDrone loadDrone)
     {
-        return "LOADED";
+        //check battery level
+        int batteryLevel = 0;
+        try
+        {
+                batteryLevel = droneRepository.getDroneBatteryLevel(loadDrone.getSerialNumber());
+                //declare an arraylist to hold the number of medications, and check the size of each by getting the
+            // data from the database.
+
+        }
+        catch
+        {
+
+        }
+       // return "LOADED";
     }
 
     public List<String> getLoadedMedication(String serialNumber)

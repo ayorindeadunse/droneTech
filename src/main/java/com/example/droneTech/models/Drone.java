@@ -8,11 +8,17 @@ public class Drone {
     // Declare drone properties
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id; //auto increment. Identity column.
+    @Column(name = "serialNumber")
     private String serialNumber;
+    @Column(name = "droneModel")
     private DroneModel droneModel;
+    @Column(name = "droneWeight")
     private int droneWeight;
+    @Column(name = "batteryCapacity")
     private int batteryCapacity;
+    @Column(name = "droneState")
     private DroneState droneState;
 
     // add constructor

@@ -7,11 +7,15 @@ import javax.persistence.*;
 public class Medication {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id; // identity
+    @Column(name = "name")
     private String name;
+    @Column(name = "medicineWeight")
     private int medicineWeight;
+    @Column(name = "code",unique = true)
     private String code;
-    private String medicationSerialNumber;
+    @Column(name = "medicationImage")
     private byte[] medicationImage;
 
     public Medication() {
