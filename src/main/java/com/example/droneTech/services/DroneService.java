@@ -1,6 +1,7 @@
 package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
+import com.example.droneTech.RequestsAndResponses.MedicationRegistrationRequest;
 import com.example.droneTech.models.*;
 import com.example.droneTech.repositories.*;
 import com.example.droneTech.util.Constants;
@@ -37,16 +38,15 @@ public class DroneService implements IDroneService,IMedicationService{
  *
  * check if the drone exists
  */
-        Drone d,us,d1= null;
+        Drone us,d1= null;
         DroneRegister dr = null;
         try {
             //check if the drone already exists.
-            // d = droneRepository.checkDroneExists(drone.getSerialNumber());
-         /*   if (d != null) // user already exists
+           Drone d = checkDroneExists(drone.getSerialNumber());
+           if (d != null)
             {
-              //  LOGGER.info("This Drone is already registered " + user.getEmail());
-               // throw droneNotFoundException (create it as well)
-            }*/
+            System.out.println("The Drone with Serial Number: " +drone.getSerialNumber() + "already exists.");
+            }
             us = new Drone();
             us.setSerialNumber(drone.getSerialNumber());
             us.setDroneModel(drone.getDroneModel());
@@ -77,7 +77,7 @@ public class DroneService implements IDroneService,IMedicationService{
                     ev.setDateModified(new Date());
 
                    EventLog ev1 = eventLogRepository.save(ev);
-                   System.out.println("Drone registered. Log entry: "+ev1.getId());
+                   System.out.println("New Audit log created.(Drone registered). Log entry: "+ev1.getId());
                 }
             }
         }
@@ -88,6 +88,19 @@ public class DroneService implements IDroneService,IMedicationService{
         return d1;
     }
 
+    public Drone checkDroneExists(String serialNumber)
+    {
+        Drone dd = null;
+        try
+        {
+            dd = droneRepository.checkIfDroneExists(serialNumber);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return dd;
+    }
     //get medication weight
     public int getMedicationWeight(String code)
     {
@@ -104,33 +117,21 @@ public class DroneService implements IDroneService,IMedicationService{
         return weight;
     }
     // get drone state
-    public String getDroneState(String serialNumber)
+    /*public String getSelectedDroneState(String serialNumber)
     {
         String droneState = "";
         try
         {
            droneState = droneRepository.getCurrentDroneState(serialNumber);
-
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
         // query the Event log for the drone state.
-      /*  try
-        {
-            Query query = em.createNativeQuery("select s.droneState from EventLog s where s.serialNumber = :serialNumber order by s.dateCreated desc ")
-                    .setParameter("serialNumber", serialNumber);
 
-            List<Object[]> resultList = query.getResultList();
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        return "Drone state is:";*/
         return droneState;
-    }
+    }*/
 
     //get battery level
     public int getBatteryLevel(String serialNumber)
@@ -184,13 +185,13 @@ public class DroneService implements IDroneService,IMedicationService{
 
     public String LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
     {
-        int batteryLevel,droneWeight,totalMedicationWeight = 0;
+        int droneWeight,totalMedicationWeight = 0;
         try
         {
             // Check drone battery level
-               batteryLevel = droneRepository.getDroneBatteryLevel(serialNumber);
+              int batteryLevel = getBatteryLevel(serialNumber);
                droneWeight = Constants.MAX_DRONE_WEIGHT;
-                List<String> medicationItems = new ArrayList<>();
+              //  List<String> medicationItems = new ArrayList<>();
                 //declare an arraylist to hold the number of medications, and check the size of each by getting the
             // data from the database.
             /* implement do-while loop here
@@ -208,7 +209,7 @@ public class DroneService implements IDroneService,IMedicationService{
                 do {
                     for(int i = 0; i <= loadDrone.size(); i++)
                     {
-                        int medicationWeight = medicationRepository.medicationWeight(loadDrone.get(i).getMedicineCode());
+                       int medicationWeight = getMedicationWeight(loadDrone.get(i).getMedicineCode());
                         totalMedicationWeight += medicationWeight;
                         // check battery level
                         if(batteryLevel < 25)
@@ -241,7 +242,7 @@ public class DroneService implements IDroneService,IMedicationService{
                                 el.setDateModified((new Date()));
 
                                 EventLog e = eventLogRepository.save(el);
-                                System.out.println("New Audit record logged for loaded drone: "+e.getId());
+                                System.out.println("New Audit record logged(Load Drone) "+e.getId());
                             }
                         }
                     }
@@ -285,13 +286,36 @@ public class DroneService implements IDroneService,IMedicationService{
         return loadedMedication;
     }
 
-    public List<Medication> registerMedication(Medication medication)
+    public Medication registerMedication(MedicationRegistrationRequest medication)
     {
         //call method to save medication object into database and return to the client
-        List<Medication> registeredMedication = new ArrayList<Medication>();
-        // call method from DronesRepository interface to save the registeredMedication object into the Medication table;
-        //return registeredMedication.
-        return registeredMedication;
+        Medication m = null;
+        try
+        {
+            //check if the medication already exists.
+             m = medicationRepository.checkIfMedicationExists(medication.getCode());
+           if (m != null) // medication already exists
+            {
+              System.out.println("Medication with code " + medication.getCode() + "already exists");
+            }
+           //esle, save record in MedicationRegister table and log in EventLog
+            Medication me = new Medication();
+           me.setName(medication.getName());
+           me.setMedicineWeight(medication.getMedicineWeight());
+           me.setCode(medication.getCode());
+           me.setMedicationImage(medication.getMedicationImage());
+
+           Medication me1 = medicationRepository.save(me);
+           if(me1.getId() > 0)
+           {
+               System.out.println("Medication with code " + medication.getCode() + "has been registered");
+           }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return m;
     }
     public List<Drone> getDroneDetails(String serialNumber)
     {
