@@ -17,7 +17,7 @@ public interface IDroneService {
     String LoadDrone(String serialNumber,List<LoadDrone> loadDrone); //return the drone state after loading the drone with medication.
     List<String> getLoadedMedication(String serialNumber); //get a list of loaded medication for a given drone
     Medication registerMedication(MedicationRegistrationRequest medication); //register a medication item in inventory and return the details; /** extra method **/
-    List<Drone> getDroneDetails(String serialNumber); //Get spec details of a drone; /** extra method */
+    Drone getDroneDetails(String serialNumber); //Get spec details of a drone; /** extra method */
     int recalculateBatteryLevel(int currentBatteryLevel, int medicineCount); /*assumed logic for drone battery level calculation */
     Drone checkDroneExists(String serialNumber);
 }

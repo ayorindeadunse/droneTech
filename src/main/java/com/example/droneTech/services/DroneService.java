@@ -317,10 +317,17 @@ public class DroneService implements IDroneService,IMedicationService{
         }
         return m;
     }
-    public List<Drone> getDroneDetails(String serialNumber)
+    public Drone getDroneDetails(String serialNumber)
     {
-        // call method in DronesRepository to return the drone details from the database
-        List<Drone> droneDetails = new ArrayList<Drone>();
+        Drone droneDetails = null;
+        try
+        {
+            droneDetails = checkDroneExists(serialNumber);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
         return droneDetails;
     }
 }
