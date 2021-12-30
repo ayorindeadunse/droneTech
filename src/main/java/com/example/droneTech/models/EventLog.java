@@ -70,4 +70,12 @@ public class EventLog {
     public void setDateModified(Date dateModified) {
         this.dateModified = dateModified;
     }
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
 }

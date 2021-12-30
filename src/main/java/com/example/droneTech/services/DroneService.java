@@ -2,9 +2,8 @@ package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
 import com.example.droneTech.models.*;
-import com.example.droneTech.repositories.DroneRegisterRepository;
-import com.example.droneTech.repositories.DroneRepository;
-import com.example.droneTech.repositories.EventLogRepository;
+import com.example.droneTech.repositories.*;
+import com.example.droneTech.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -14,22 +13,27 @@ import java.util.List;
 
 @Service
 @Transactional
-public class DroneService implements IDroneService{
+public class DroneService implements IDroneService,IMedicationService{
 
     @Autowired
     private DroneRepository droneRepository;
     private DroneRegisterRepository droneRegisterRepository;
     private EventLogRepository eventLogRepository;
+    private MedicationRepository medicationRepository;
+    private LoadDroneRepository loadDroneRepository;
 
     public DroneService(DroneRepository droneRepository,DroneRegisterRepository droneRegisterRepository,
-                        EventLogRepository eventLogRepository) {
+                        EventLogRepository eventLogRepository,MedicationRepository medicationRepository,
+                        LoadDroneRepository loadDroneRepository) {
         this.droneRepository = droneRepository;
         this.droneRegisterRepository =  droneRegisterRepository;
         this.eventLogRepository = eventLogRepository;
+        this.medicationRepository = medicationRepository;
+        this.loadDroneRepository = loadDroneRepository;
     }
 
     public Drone registerDrone(DroneRegistrationRequest drone) {
-/****To do
+/*To do
  *
  * check if the drone exists
  */
@@ -65,9 +69,15 @@ public class DroneService implements IDroneService{
                     System.out.println("Drone successfully registered");
 
                     //log state in event log
-                    EventLog ev = new EventLog(d1.getSerialNumber(),d1.getDroneState()
-                            ,d1.getBatteryCapacity(),new Date(),new Date());
-                    eventLogRepository.save(ev);
+                    EventLog ev = new EventLog();
+                    ev.setSerialNumber(d1.getSerialNumber());
+                    ev.setDroneState(d1.getDroneState());
+                    ev.setBatteryLevel(d1.getBatteryCapacity());
+                    ev.setDateCreated(new Date());
+                    ev.setDateModified(new Date());
+
+                   EventLog ev1 = eventLogRepository.save(ev);
+                   System.out.println("Drone registered. Log entry: "+ev1.getId());
                 }
             }
         }
@@ -76,6 +86,22 @@ public class DroneService implements IDroneService{
             e.printStackTrace();
         }
         return d1;
+    }
+
+    //get medication weight
+    public int getMedicationWeight(String code)
+    {
+        int weight = 0;
+        try
+        {
+            weight = medicationRepository.medicationWeight(code);
+            System.out.println("The medication for" + code + " is:" + weight);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return weight;
     }
     // get drone state
     public String getDroneState(String serialNumber)
@@ -150,22 +176,71 @@ public class DroneService implements IDroneService{
         return availableDrones;
     }
 
-    public String LoadDrone(LoadDrone loadDrone)
+    public String LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
     {
-        //check battery level
         int batteryLevel = 0;
+        int droneWeight = 0;
         try
         {
-                batteryLevel = droneRepository.getDroneBatteryLevel(loadDrone.getSerialNumber());
+            // Check drone battery level
+               batteryLevel = droneRepository.getDroneBatteryLevel(serialNumber);
+               droneWeight = Constants.MAX_DRONE_WEIGHT;
+               int totalMedicationWeight = 0;
+                List<String> medicationItems = new ArrayList<>();
                 //declare an arraylist to hold the number of medications, and check the size of each by getting the
             // data from the database.
+            /* implement do-while loop here
+                 *get weight of medication
+                 *sum the weight up of the medication
+                 * Check battery level of drone
+                 *check if medicationWeight < droneWeight
+                 * if so, load medication onto drone and save record in database.
+                 * log battery leve in eventlog
+                 *if medicationWeight > droneWeight,  exit the loop
+                 *
+                 *
+             *
+             * */
+                do {
+                    for(int i = 0; i <= loadDrone.size(); i++)
+                    {
+                        int medicationWeight = medicationRepository.medicationWeight(loadDrone.get(i).getMedicineCode());
+                        totalMedicationWeight += medicationWeight;
+                        // check battery level
+                        if(batteryLevel < 25)
+                        {
+                            System.out.println("Drone battery level is  too low for this operation.");
+                        }
+                        else
+                        {
+                            LoadDrone ld = new LoadDrone();
+                            ld.setSerialNumber(loadDrone.get(i).getSerialNumber());
+                            ld.setMedicineCode(loadDrone.get(i).getMedicineCode());
+                            ld.setDroneState(loadDrone.get(i).getDroneState());
+                            ld.setDateCreated(new Date());
+                            ld.setDateModified(new Date());
+
+                            //save drone load
+                            LoadDrone ld1 = loadDroneRepository.save(ld);
+
+                           // if saved successfully, recalculate  drone battery level and save in event log.
+                            if(ld1.getId() > 0)
+                            {
+
+                            }
+
+                        }
+                    }
+                }
+                while(totalMedicationWeight < droneWeight);
+
 
         }
-        catch
+        catch(Exception e)
         {
-
+            e.printStackTrace();
         }
-       // return "LOADED";
+        return "Drone with Serial Number: "+serialNumber + "has been loaded with...medicines";
     }
 
     public List<String> getLoadedMedication(String serialNumber)

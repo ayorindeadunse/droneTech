@@ -13,7 +13,7 @@ public class LoadDrone {
     @Column(name = "serialNumber",unique = true)
     private String serialNumber;
     @Column(name = "medicinecode",unique = true)
-    private String medicinecode;
+    private String medicineCode;
     @Column(name = "droneState")
     private DroneState droneState;
     @Column(name = "dateCreated")
@@ -24,12 +24,12 @@ public class LoadDrone {
     public LoadDrone() {
     }
 
-    public LoadDrone(String serialNumber,String medicinecode, DroneState droneState, Date dateCreated, Date dateModified) {
+    public LoadDrone(String serialNumber,String medicineCode, DroneState droneState, Date dateCreated, Date dateModified) {
         this.serialNumber = serialNumber;
         this.droneState = droneState;
         this.dateCreated = dateCreated;
         this.dateModified = dateModified;
-        this.medicinecode = medicinecode;
+        this.medicineCode = medicineCode;
     }
 
     public String getSerialNumber() {
@@ -40,12 +40,20 @@ public class LoadDrone {
         this.serialNumber = serialNumber;
     }
 
+    public String getMedicineCode() {
+        return medicineCode;
+    }
+
+    public void setMedicineCode(String medicineCode) {
+        this.medicineCode = medicineCode;
+    }
+
     public DroneState getDroneState() {
         return droneState;
     }
 
     public void setDroneState(DroneState droneState) {
-        this.droneState = droneState;
+        this.droneState = DroneState.LOADED;
     }
 
     public Date getDateCreated() {
@@ -64,12 +72,11 @@ public class LoadDrone {
         this.dateModified = dateModified;
     }
 
-    public String getMedicationCode() {
-        return medicinecode;
+    public Long getId() {
+        return id;
     }
 
-    public void setMedicationCode(String medicinecode) {
-        this.medicinecode = medicinecode;
+    public void setId(Long id) {
+        this.id = id;
     }
-
 }
