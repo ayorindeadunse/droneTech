@@ -17,5 +17,6 @@ public interface IDroneService {
     List<String> getLoadedMedication(String serialNumber); //get a list of loaded medication for a given drone
     List<Medication> registerMedication(Medication medication); //register a medication item in inventory and return the details; /** extra method **/
     List<Drone> getDroneDetails(String serialNumber); //Get spec details of a drone; /** extra method */
+    int recalculateBatteryLevel(int currentBatteryLevel, int medicineCount); /*assumed logic for drone battery level calculation */
 
 }

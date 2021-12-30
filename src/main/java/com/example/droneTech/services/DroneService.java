@@ -147,6 +147,12 @@ public class DroneService implements IDroneService,IMedicationService{
         return batteryLevel;
     }
 
+    // recalculate battery level
+    public int recalculateBatteryLevel(int currentBatteryLevel, int medicineCount)
+    {
+        return currentBatteryLevel - medicineCount;
+    }
+
     public List<String> getAvailableDrones()
     {
         List<String> availableDrones = new ArrayList<>();
@@ -178,14 +184,12 @@ public class DroneService implements IDroneService,IMedicationService{
 
     public String LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
     {
-        int batteryLevel = 0;
-        int droneWeight = 0;
+        int batteryLevel,droneWeight,totalMedicationWeight = 0;
         try
         {
             // Check drone battery level
                batteryLevel = droneRepository.getDroneBatteryLevel(serialNumber);
                droneWeight = Constants.MAX_DRONE_WEIGHT;
-               int totalMedicationWeight = 0;
                 List<String> medicationItems = new ArrayList<>();
                 //declare an arraylist to hold the number of medications, and check the size of each by getting the
             // data from the database.
@@ -214,7 +218,7 @@ public class DroneService implements IDroneService,IMedicationService{
                         else
                         {
                             LoadDrone ld = new LoadDrone();
-                            ld.setSerialNumber(loadDrone.get(i).getSerialNumber());
+                            ld.setSerialNumber(serialNumber);
                             ld.setMedicineCode(loadDrone.get(i).getMedicineCode());
                             ld.setDroneState(loadDrone.get(i).getDroneState());
                             ld.setDateCreated(new Date());
@@ -226,21 +230,29 @@ public class DroneService implements IDroneService,IMedicationService{
                            // if saved successfully, recalculate  drone battery level and save in event log.
                             if(ld1.getId() > 0)
                             {
+                                int medicineCount = loadDrone.size();
+                                int newBatteryLevel =  recalculateBatteryLevel(batteryLevel,medicineCount);
 
+                                EventLog el = new EventLog();
+                                el.setSerialNumber(serialNumber);
+                                el.setDroneState(ld.getDroneState());
+                                el.setBatteryLevel(newBatteryLevel);
+                                el.setDateCreated(new Date());
+                                el.setDateModified((new Date()));
+
+                                EventLog e = eventLogRepository.save(el);
+                                System.out.println("New Audit record logged for loaded drone: "+e.getId());
                             }
-
                         }
                     }
                 }
                 while(totalMedicationWeight < droneWeight);
-
-
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
-        return "Drone with Serial Number: "+serialNumber + "has been loaded with...medicines";
+        return "Drone with Serial Number: "+serialNumber + "has been loaded successfully";
     }
 
     public List<String> getLoadedMedication(String serialNumber)
