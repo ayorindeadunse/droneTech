@@ -11,6 +11,6 @@ public interface MedicationRepository extends JpaRepository<Medication,Long> {
     @Query(value = "SELECT medicineWeight from medications where code = ?1",nativeQuery = true)
     int medicationWeight(String medicationCode);
 
-    @Query(value = "SELECT * FROM medications WHERE code = ?!",nativeQuery = true)
+    @Query(value = "SELECT * FROM medications WHERE code = ?1",nativeQuery = true)
     Medication checkIfMedicationExists(String code);
 }
