@@ -8,9 +8,13 @@ import java.util.Date;
 public class MedicationRegister {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Long Id; // primary key
+    @Column(name = "medicationId")
     private Long MedicationId; //make this a unique field
+    @Column(name = "createdDate")
     private Date createdDate;
+    @Column(name = "modifiedDate")
     private Date modifiedDate;
 
     public MedicationRegister() {

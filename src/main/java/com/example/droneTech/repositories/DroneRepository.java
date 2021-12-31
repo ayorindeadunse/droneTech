@@ -13,7 +13,7 @@ public interface DroneRepository extends JpaRepository<Drone,String> {
     @Query(value = "SELECT serialNumber FROM eventlog WHERE droneState = 'IDLE'", nativeQuery=true)
     List<String> getAllAvailableDrones();
 
-    @Query(value = "SELECT medicationId FROM loadeddrones WHERE serialNumber = ?1", nativeQuery=true)
+    @Query(value = "SELECT medicineCode FROM loadeddrones WHERE serialNumber = ?1", nativeQuery=true)
     List<String> getDroneAvailableMedication(String serialNumber);
 
    /* @Query(value ="SELECT droneState from eventlog WHERE serialNumber = ?1 ORDER BY dateCreated desc LIMIT 1",nativeQuery = true)

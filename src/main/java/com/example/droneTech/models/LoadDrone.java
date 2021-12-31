@@ -9,10 +9,11 @@ public class LoadDrone {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     @Column(name = "serialNumber",unique = true)
     private String serialNumber;
-    @Column(name = "medicinecode",unique = true)
+    @Column(name = "medicineCode",unique = true)
     private String medicineCode;
     @Column(name = "droneState")
     private DroneState droneState;
