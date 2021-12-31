@@ -108,7 +108,7 @@ public class DroneService implements IDroneService,IMedicationService{
         try
         {
             weight = medicationRepository.medicationWeight(code);
-            System.out.println("The medication for" + code + " is:" + weight);
+            System.out.println("The medication for" + code + " is:" + weight + "g");
         }
         catch(Exception e)
         {
@@ -191,21 +191,6 @@ public class DroneService implements IDroneService,IMedicationService{
             // Check drone battery level
               int batteryLevel = getBatteryLevel(serialNumber);
                droneWeight = Constants.MAX_DRONE_WEIGHT;
-              //  List<String> medicationItems = new ArrayList<>();
-                //declare an arraylist to hold the number of medications, and check the size of each by getting the
-            // data from the database.
-            /* implement do-while loop here
-                 *get weight of medication
-                 *sum the weight up of the medication
-                 * Check battery level of drone
-                 *check if medicationWeight < droneWeight
-                 * if so, load medication onto drone and save record in database.
-                 * log battery leve in eventlog
-                 *if medicationWeight > droneWeight,  exit the loop
-                 *
-                 *
-             *
-             * */
                 do {
                     for(int i = 0; i <= loadDrone.size(); i++)
                     {
