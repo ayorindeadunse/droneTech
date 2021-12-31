@@ -40,15 +40,17 @@ public class DroneService implements IDroneService,IMedicationService{
  */
         Drone us,d1= null;
         DroneRegister dr = null;
+        /* Create a Serial Number for the drone */
+        String serialNumber = drone.setSerialNumber();
         try {
             //check if the drone already exists.
-           Drone d = checkDroneExists(drone.getSerialNumber());
+           Drone d = checkDroneExists(serialNumber);
            if (d != null)
             {
-            System.out.println("The Drone with Serial Number: " +drone.getSerialNumber() + "already exists.");
+            System.out.println("The Drone with Serial Number: " +serialNumber + "already exists.");
             }
             us = new Drone();
-            us.setSerialNumber(drone.getSerialNumber());
+            us.setSerialNumber(serialNumber);
             us.setDroneModel(drone.getDroneModel());
             us.setDroneWeight(drone.getDroneWeight());
             us.setBatteryCapacity(drone.getBatteryCapacity());

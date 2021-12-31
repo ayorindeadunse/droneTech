@@ -12,8 +12,8 @@ import java.util.UUID;
 
 public class DroneRegistrationRequest {
     @NotBlank
-    @Size(max = 100)
-    private String serialNumber;
+  //  @Size(max = 100)
+   // private String serialNumber;
     @NotBlank
     @Size(max = 500)
     private int droneWeight;
@@ -35,14 +35,14 @@ public class DroneRegistrationRequest {
         return uniqueID;
     }
 
-    public String getSerialNumber() {
+    /*public String getSerialNumber() {
         return serialNumber;
-    }
+    }*/
 
-    public void setSerialNumber(String serialNumber) {
+    public String setSerialNumber() {
 
-        this.serialNumber = serialNumber;
-        this.serialNumber = createSerialNumber();
+      String serialNumber = createSerialNumber();
+      return serialNumber;
     }
 
     public int getDroneWeight() {
