@@ -1,11 +1,13 @@
 package com.example.droneTech.RequestsAndResponses;
 
+import com.example.droneTech.models.LoadDrone;
+
 import java.util.List;
 
 public class LoadDroneRequest {
 
     private String serialNumber;
-    private List<String> medicationId;
+    private List<LoadDrone> loadDrone;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -15,11 +17,11 @@ public class LoadDroneRequest {
         this.serialNumber = serialNumber;
     }
 
-    public List<String> getMedicationId() {
-        return medicationId;
+    public List<LoadDrone> getLoadDrone() {
+        return loadDrone;
     }
 
-    public void setMedicationId(List<String> medicationId) {
-        this.medicationId = medicationId;
+    public void setLoadDrone(List<LoadDrone> loadDrone) {
+        this.loadDrone = loadDrone;
     }
 }
