@@ -192,6 +192,7 @@ public class DroneService implements IDroneService,IMedicationService{
         int droneWeight,totalMedicationWeight = 0;
         LoadDrone ld,ld1 = null;
         DroneState checkDroneState = getSelectedDroneState(loadDrone.getSerialNumber());
+        System.out.println("Drone state is " + checkDroneState);
         if(checkDroneState == DroneState.IDLE) {
             try
             {
