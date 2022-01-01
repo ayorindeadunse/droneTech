@@ -53,8 +53,8 @@ public class DroneService implements IDroneService,IMedicationService{
             us.setSerialNumber(serialNumber);
             us.setDroneModel(drone.getDroneModel());
             us.setDroneWeight(drone.getDroneWeight());
-            us.setBatteryCapacity(drone.getBatteryCapacity());
-            us.setDroneState(drone.getState());
+            us.setBatteryCapacity(Constants.BATTERY_CAPACITY);
+            us.setDroneState(DroneState.IDLE);
 
             d1 = droneRepository.save(us);
             if ( d1.getSerialNumber() != null) {
@@ -119,12 +119,12 @@ public class DroneService implements IDroneService,IMedicationService{
         return weight;
     }
     // get drone state
-    /*public String getSelectedDroneState(String serialNumber)
+    public DroneState getSelectedDroneState(String serialNumber)
     {
-        String droneState = "";
+        DroneState droneState = DroneState.IDLE;
         try
         {
-           droneState = droneRepository.getCurrentDroneState(serialNumber);
+         droneState = droneRepository.getCurrentDroneState(serialNumber);
         }
         catch(Exception e)
         {
@@ -133,7 +133,7 @@ public class DroneService implements IDroneService,IMedicationService{
         // query the Event log for the drone state.
 
         return droneState;
-    }*/
+    }
 
     //get battery level
     public int getBatteryLevel(String serialNumber)
@@ -188,58 +188,87 @@ public class DroneService implements IDroneService,IMedicationService{
     public String LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
     {
         int droneWeight,totalMedicationWeight = 0;
-        try
-        {
-            // Check drone battery level
-              int batteryLevel = getBatteryLevel(serialNumber);
-               droneWeight = Constants.MAX_DRONE_WEIGHT;
+        DroneState checkDroneState = getSelectedDroneState(serialNumber);
+        if(checkDroneState == DroneState.IDLE) {
+            try {
+                //Before you load, ensure the load is in an idle state.
+                // Check drone battery level
+                int batteryLevel = getBatteryLevel(serialNumber);
+                //get drone weight from drones table
+                droneWeight = droneRepository.getDroneWeight(serialNumber);
                 do {
-                    for(int i = 0; i <= loadDrone.size(); i++)
-                    {
-                       int medicationWeight = getMedicationWeight(loadDrone.get(i).getMedicineCode());
+                    for (int i = 0; i < loadDrone.size(); i++) {
+                        int medicationWeight = getMedicationWeight(loadDrone.get(i).getMedicineCode());
                         totalMedicationWeight += medicationWeight;
                         // check battery level
-                        if(batteryLevel < 25)
-                        {
+                        if (batteryLevel < 25) {
                             System.out.println("Drone battery level is  too low for this operation.");
-                        }
-                        else
-                        {
+                        } else {
                             LoadDrone ld = new LoadDrone();
                             ld.setSerialNumber(serialNumber);
                             ld.setMedicineCode(loadDrone.get(i).getMedicineCode());
-                            ld.setDroneState(loadDrone.get(i).getDroneState());
+                            ld.setDroneState(DroneState.LOADING);
                             ld.setDateCreated(new Date());
                             ld.setDateModified(new Date());
+
+                            //Set drone state to loading
+                            EventLog eloading = new EventLog();
+                            eloading.setSerialNumber(serialNumber);
+                            eloading.setDroneState(DroneState.LOADING);
+                            eloading.setBatteryLevel(recalculateBatteryLevel(batteryLevel, i + 1));
+                            eloading.setDateCreated(new Date());
+                            eloading.setDateModified((new Date()));
+
+                            eventLogRepository.save(eloading);
 
                             //save drone load
                             LoadDrone ld1 = loadDroneRepository.save(ld);
 
-                           // if saved successfully, recalculate  drone battery level and save in event log.
-                            if(ld1.getId() > 0)
-                            {
+                            // if saved successfully, recalculate  drone battery level and save in event log.
+                            if (ld1.getId() > 0) {
                                 int medicineCount = loadDrone.size();
-                                int newBatteryLevel =  recalculateBatteryLevel(batteryLevel,medicineCount);
+                                int newBatteryLevel = recalculateBatteryLevel(batteryLevel, medicineCount);
+
+                                /*  assign a new Drone state for the battery level*/
 
                                 EventLog el = new EventLog();
                                 el.setSerialNumber(serialNumber);
-                                el.setDroneState(ld.getDroneState());
+                                el.setDroneState(DroneState.LOADED);
                                 el.setBatteryLevel(newBatteryLevel);
                                 el.setDateCreated(new Date());
                                 el.setDateModified((new Date()));
 
                                 EventLog e = eventLogRepository.save(el);
-                                System.out.println("New Audit record logged(Load Drone) "+e.getId());
+                                System.out.println("New Audit record logged(Load Drone) " + e.getId());
+                                // set delivery, delivered and returning logs
+                                EventLog eDelivering = new EventLog(serialNumber, DroneState.DELIVERING, newBatteryLevel,
+                                        new Date(), new Date());
+                                eventLogRepository.save(eDelivering);
+
+                                EventLog eDelivered = new EventLog(serialNumber, DroneState.DELIVERED,
+                                        newBatteryLevel, new Date(), new Date());
+                                eventLogRepository.save(eDelivered);
+
+                                EventLog eReturning = new EventLog(serialNumber, DroneState.RETURNING,
+                                        newBatteryLevel, new Date(), new Date());
+                                eventLogRepository.save(eReturning);
                             }
                         }
                     }
                 }
-                while(totalMedicationWeight < droneWeight);
+                while (totalMedicationWeight < droneWeight);
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
-        catch(Exception e)
+        else
         {
-            e.printStackTrace();
+            System.out.println("Drone with Serial Number: "+serialNumber + "is currently engaged. Please try " +
+                    "again later.");
         }
+
         return "Drone with Serial Number: "+serialNumber + "has been loaded successfully";
     }
 

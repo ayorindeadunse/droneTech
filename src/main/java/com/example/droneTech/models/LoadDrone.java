@@ -54,7 +54,7 @@ public class LoadDrone {
     }
 
     public void setDroneState(DroneState droneState) {
-        this.droneState = DroneState.LOADED;
+        this.droneState = droneState;
     }
 
     public Date getDateCreated() {

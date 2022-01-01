@@ -17,17 +17,8 @@ public class DroneRegistrationRequest {
     @NotBlank
     @Size(max = 500)
     private int droneWeight;
-
-    @NotBlank
-    private int batteryCapacity;
-
-    @NotBlank
-    private DroneState state;
-
     @NotBlank
     private DroneModel droneModel;
-
-
     // Create unique serial number
     public String createSerialNumber()
     {
@@ -48,27 +39,9 @@ public class DroneRegistrationRequest {
     public int getDroneWeight() {
         return droneWeight;
     }
-
     public void setDroneWeight(int droneWeight) {
         this.droneWeight = droneWeight;
     }
-
-    public int getBatteryCapacity() {
-        return batteryCapacity;
-    }
-
-    public void setBatteryCapacity(int batteryCapacity) {
-        this.batteryCapacity = batteryCapacity;
-    }
-
-    public DroneState getState() {
-        return state;
-    }
-
-    public void setState(DroneState state) {
-        this.state = state;
-    }
-
     public DroneModel getDroneModel() {
         return droneModel;
     }
