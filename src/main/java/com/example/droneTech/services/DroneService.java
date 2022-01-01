@@ -214,8 +214,6 @@ public class DroneService implements IDroneService,IMedicationService{
                             ld.setDateCreated(new Date());
                             ld.setDateModified(new Date());
 
-                            loaded.add(ld);
-
                             //Set drone state to loading
                             EventLog eLoading = new EventLog();
                             eLoading.setSerialNumber(loadDrone.getSerialNumber());
@@ -228,6 +226,9 @@ public class DroneService implements IDroneService,IMedicationService{
 
                             //save drone load
                             ld1 = loadDroneRepository.save(ld);
+
+                            //add to loaded list to send back to client
+                            loaded.add(ld);
 
                             // if saved successfully, recalculate  drone battery level and save in event log.
                             if (ld1.getId() > 0) {
