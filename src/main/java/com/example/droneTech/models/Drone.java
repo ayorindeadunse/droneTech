@@ -10,7 +10,7 @@ public class Drone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id; //auto increment. Identity column.
-    @Column(name = "serialNumber")
+    @Column(name = "serialNumber",unique = true)
     private String serialNumber;
     @Column(name = "droneModel")
     private DroneModel droneModel;

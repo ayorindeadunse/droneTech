@@ -13,7 +13,7 @@ public class LoadDrone {
     private Long id;
     @Column(name = "serialNumber")
     private String serialNumber;
-    @Column(name = "medicineCode",unique = true)
+    @Column(name = "medicineCode")
     private String medicineCode;
     @Column(name = "droneState")
     private DroneState droneState;
