@@ -190,8 +190,8 @@ public class DroneService implements IDroneService,IMedicationService{
         int droneWeight,totalMedicationWeight = 0;
         DroneState checkDroneState = getSelectedDroneState(serialNumber);
         if(checkDroneState == DroneState.IDLE) {
-            try {
-                //Before you load, ensure the load is in an idle state.
+            try
+            {
                 // Check drone battery level
                 int batteryLevel = getBatteryLevel(serialNumber);
                 //get drone weight from drones table
