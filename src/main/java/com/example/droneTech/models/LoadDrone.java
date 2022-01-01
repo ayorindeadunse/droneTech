@@ -11,7 +11,7 @@ public class LoadDrone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @Column(name = "serialNumber",unique = true)
+    @Column(name = "serialNumber")
     private String serialNumber;
     @Column(name = "medicineCode",unique = true)
     private String medicineCode;
