@@ -192,7 +192,7 @@ public class DroneService implements IDroneService,IMedicationService{
         int droneWeight,totalMedicationWeight = 0;
         LoadDrone ld,ld1 = null;
         DroneState checkDroneState = getSelectedDroneState(loadDrone.getSerialNumber());
-        System.out.println("Drone state is " + checkDroneState);
+       // System.out.println("Drone state is " + checkDroneState);
         if(checkDroneState == DroneState.IDLE) {
             try
             {
@@ -200,14 +200,19 @@ public class DroneService implements IDroneService,IMedicationService{
                 int batteryLevel = getBatteryLevel(loadDrone.getSerialNumber());
                 //get drone weight from drones table
                 droneWeight = droneRepository.getDroneWeight(loadDrone.getSerialNumber());
-                do {
+               // do {
                    for (int i = 0; i < loadDrone.getMedicineCode().size(); i++) {
                         int medicationWeight = getMedicationWeight(loadDrone.getMedicineCode().get(i));
                         totalMedicationWeight += medicationWeight;
                         // check battery level
                         if (batteryLevel < 25) {
                             System.out.println("Drone battery level is  too low for this operation.");
-                        } else {
+                        }
+                        else if(totalMedicationWeight > droneWeight)
+                        {
+                            System.out.println("Drone cannot be loaded because the content is too heavy.");
+                        }
+                        else {
                             ld = new LoadDrone();
                             ld.setSerialNumber(loadDrone.getSerialNumber());
                             ld.setMedicineCode(loadDrone.getMedicineCode().get(i));
@@ -215,6 +220,11 @@ public class DroneService implements IDroneService,IMedicationService{
                             ld.setDateCreated(new Date());
                             ld.setDateModified(new Date());
 
+                            //save drone load
+                            ld1 = loadDroneRepository.save(ld);
+
+                            //load the medication onto drone
+                            loaded.add(ld);
                             //Set drone state to loading
                             EventLog eLoading = new EventLog();
                             eLoading.setSerialNumber(loadDrone.getSerialNumber());
@@ -224,46 +234,39 @@ public class DroneService implements IDroneService,IMedicationService{
                             eLoading.setDateModified((new Date()));
 
                             eventLogRepository.save(eLoading);
-
-                            //save drone load
-                            ld1 = loadDroneRepository.save(ld);
-
-                            //add to loaded list to send back to client
-                            loaded.add(ld);
-
-                            // if saved successfully, recalculate  drone battery level and save in event log.
-                            if (ld1.getId() > 0) {
-                                int medicineCount = loadDrone.getMedicineCode().size();
-                                int newBatteryLevel = recalculateBatteryLevel(batteryLevel, medicineCount);
-
-                                /*  assign a new Drone state for the battery level*/
-
-                                EventLog el = new EventLog();
-                                el.setSerialNumber(loadDrone.getSerialNumber());
-                                el.setDroneState(DroneState.LOADED);
-                                el.setBatteryLevel(newBatteryLevel);
-                                el.setDateCreated(new Date());
-                                el.setDateModified((new Date()));
-
-                                EventLog e = eventLogRepository.save(el);
-                                System.out.println("New Audit record logged(Load Drone) " + e.getId());
-                                // set delivery, delivered and returning logs
-                                EventLog eDelivering = new EventLog(loadDrone.getSerialNumber(), DroneState.DELIVERING, newBatteryLevel,
-                                        new Date(), new Date());
-                                eventLogRepository.save(eDelivering);
-
-                                EventLog eDelivered = new EventLog(loadDrone.getSerialNumber(), DroneState.DELIVERED,
-                                        newBatteryLevel, new Date(), new Date());
-                                eventLogRepository.save(eDelivered);
-
-                                EventLog eReturning = new EventLog(loadDrone.getSerialNumber(), DroneState.RETURNING,
-                                        newBatteryLevel, new Date(), new Date());
-                                eventLogRepository.save(eReturning);
-                            }
                         }
                     }
+                // if saved successfully, recalculate  drone battery level and save in event log.
+                if (ld1.getId() > 0) {
+                    int medicineCount = loadDrone.getMedicineCode().size();
+                    int newBatteryLevel = recalculateBatteryLevel(batteryLevel, medicineCount);
+
+                    /*  assign a new Drone state for the battery level*/
+
+                    EventLog el = new EventLog();
+                    el.setSerialNumber(loadDrone.getSerialNumber());
+                    el.setDroneState(DroneState.LOADED);
+                    el.setBatteryLevel(newBatteryLevel);
+                    el.setDateCreated(new Date());
+                    el.setDateModified((new Date()));
+
+                    EventLog e = eventLogRepository.save(el);
+                    System.out.println("New Audit record logged(Load Drone) " + e.getId());
+                    // set delivery, delivered and returning logs
+                    EventLog eDelivering = new EventLog(loadDrone.getSerialNumber(), DroneState.DELIVERING, newBatteryLevel,
+                            new Date(), new Date());
+                    eventLogRepository.save(eDelivering);
+
+                    EventLog eDelivered = new EventLog(loadDrone.getSerialNumber(), DroneState.DELIVERED,
+                            newBatteryLevel, new Date(), new Date());
+                    eventLogRepository.save(eDelivered);
+
+                    EventLog eReturning = new EventLog(loadDrone.getSerialNumber(), DroneState.RETURNING,
+                            newBatteryLevel, new Date(), new Date());
+                    eventLogRepository.save(eReturning);
                 }
-                while (totalMedicationWeight < droneWeight);
+              //  }
+              //  while (totalMedicationWeight < droneWeight);
             }
             catch(Exception e)
             {
