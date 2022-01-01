@@ -185,7 +185,7 @@ public class DroneService implements IDroneService,IMedicationService{
         return availableDrones;
     }
 
-    public String LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
+    public List<LoadDrone> LoadDrone(String serialNumber,List<LoadDrone> loadDrone)
     {
         int droneWeight,totalMedicationWeight = 0;
         DroneState checkDroneState = getSelectedDroneState(serialNumber);
@@ -269,7 +269,8 @@ public class DroneService implements IDroneService,IMedicationService{
                     "again later.");
         }
 
-        return "Drone with Serial Number: "+serialNumber + "has been loaded successfully";
+       // return "Drone with Serial Number: "+serialNumber + "has been loaded successfully";
+        return loadDrone;
     }
 
     public List<String> getLoadedMedication(String serialNumber)
