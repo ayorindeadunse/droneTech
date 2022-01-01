@@ -7,7 +7,7 @@ import java.util.List;
 public class LoadDroneRequest {
 
     private String serialNumber;
-    private List<LoadDrone> loadDrone;
+    private List<String> medicineCode;
 
     public String getSerialNumber() {
         return serialNumber;
@@ -17,11 +17,19 @@ public class LoadDroneRequest {
         this.serialNumber = serialNumber;
     }
 
-    public List<LoadDrone> getLoadDrone() {
+   /* public List<LoadDrone> getLoadDrone() {
         return loadDrone;
     }
 
     public void setLoadDrone(List<LoadDrone> loadDrone) {
         this.loadDrone = loadDrone;
+    }*/
+
+    public List<String> getMedicineCode() {
+        return medicineCode;
+    }
+
+    public void setMedicineCode(List<String> medicineCode) {
+        this.medicineCode = medicineCode;
     }
 }

@@ -2,8 +2,11 @@ package com.example.droneTech.controllers;
 
 import com.example.droneTech.RequestsAndResponses.ApiResponse;
 import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
+import com.example.droneTech.RequestsAndResponses.LoadDroneRequest;
+import com.example.droneTech.RequestsAndResponses.MedicationRegistrationRequest;
 import com.example.droneTech.models.Drone;
 import com.example.droneTech.models.LoadDrone;
+import com.example.droneTech.models.Medication;
 import com.example.droneTech.services.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +32,18 @@ public ResponseEntity Register(@RequestBody DroneRegistrationRequest drone)
 }
 
 @PostMapping("/loaddrone")
-    public ResponseEntity LoadDrone(@RequestBody String serialNumber, List<LoadDrone> loadDrone)
+    public ResponseEntity LoadDrone(@RequestBody LoadDroneRequest loadDrone)
 {
-    List<LoadDrone> l = droneService.LoadDrone(serialNumber,loadDrone);
+    List<LoadDrone> l = droneService.loadDrone(loadDrone);
     return ResponseEntity.ok(l);
 }
+
+@PostMapping("/registermedication")
+    public ResponseEntity registerMedication(@RequestBody MedicationRegistrationRequest medication)
+{
+    Medication m = droneService.registerMedication(medication);
+    return ResponseEntity.ok(m);
+}
+
 
 }
