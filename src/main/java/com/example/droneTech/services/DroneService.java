@@ -125,7 +125,7 @@ public class DroneService implements IDroneService,IMedicationService{
         DroneState droneState = DroneState.IDLE;
         try
         {
-         droneState = droneRepository.getCurrentDroneState(serialNumber);
+         droneState = eventLogRepository.getCurrentDroneState(serialNumber);
         }
         catch(Exception e)
         {
@@ -142,7 +142,7 @@ public class DroneService implements IDroneService,IMedicationService{
         int batteryLevel = 0;
         try
         {
-            batteryLevel = droneRepository.getDroneBatteryLevel(serialNumber);
+            batteryLevel = eventLogRepository.getDroneBatteryLevel(serialNumber);
         }
         catch(Exception e)
         {
@@ -162,7 +162,7 @@ public class DroneService implements IDroneService,IMedicationService{
         List<String> availableDrones = new ArrayList<>();
         try
         {
-            availableDrones = droneRepository.getAllAvailableDrones();
+            availableDrones = eventLogRepository.getAllAvailableDrones();
         }
        catch(Exception e)
        {
@@ -281,7 +281,7 @@ public class DroneService implements IDroneService,IMedicationService{
         List<String> loadedMedication = new ArrayList<>();
         try
         {
-            loadedMedication = droneRepository.getDroneAvailableMedication(serialNumber);
+            loadedMedication = loadDroneRepository.getDroneAvailableMedication(serialNumber);
         }
         catch(Exception e)
         {
