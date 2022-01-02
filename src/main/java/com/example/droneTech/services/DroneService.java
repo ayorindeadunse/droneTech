@@ -175,7 +175,7 @@ public class DroneService implements IDroneService,IMedicationService{
     {
         List<LoadDrone> loaded = new ArrayList<>();
         int droneWeight,totalMedicationWeight = 0;
-        LoadDrone ld,ld1 = null;
+        LoadDrone ld,ld1,ld2,ld3 = null;
         DroneState checkDroneState = getSelectedDroneState(loadDrone.getSerialNumber());
        //System.out.println("Drone state is " + checkDroneState);
         if(checkDroneState == DroneState.IDLE) {
@@ -207,6 +207,19 @@ public class DroneService implements IDroneService,IMedicationService{
                             //save drone load
                             ld1 = loadDroneRepository.save(ld);
 
+                            if(ld1.getId() > 0)
+                            {
+                                // change state to loaded
+                                ld2 = new LoadDrone();
+                                ld2.setSerialNumber(loadDrone.getSerialNumber());
+                                ld2.setMedicineCode(loadDrone.getMedicineCode().get(i));
+                                ld2.setDroneState(DroneState.LOADED);
+                                ld2.setDateCreated(new Date());
+                                ld2.setDateModified(new Date());
+
+                                ld3 = loadDroneRepository.save(ld2);
+                            }
+
                             //load the medication onto drone
                             loaded.add(ld);
                             //Set drone state to loading
@@ -221,7 +234,7 @@ public class DroneService implements IDroneService,IMedicationService{
                         }
                     }
                 // if saved successfully, recalculate  drone battery level and save in event log.
-                if (ld1.getId() > 0) {
+                if (ld3.getId() > 0) {
                     int medicineCount = loadDrone.getMedicineCode().size();
                     int newBatteryLevel = recalculateBatteryLevel(batteryLevel, medicineCount);
 
