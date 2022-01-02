@@ -168,21 +168,6 @@ public class DroneService implements IDroneService,IMedicationService{
        {
            e.printStackTrace();
        }
-        // call method from DronesRepository interface to get available drones from  event log and store in availableDrones;
-        //return availableDrones.
-       /* try
-        {
-            Query query = em.createNativeQuery("select s.serialNumber from EventLog s where s.droneState = 'IDLE'");
-            List<Object[]> resultList = query.getResultList();
-            for (Object[] r : resultList) {
-                // add to the availableDrones variable to send back to client
-                availableDrones.add((String) r[0]); // check this
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }*/
         return availableDrones;
     }
 
@@ -192,7 +177,7 @@ public class DroneService implements IDroneService,IMedicationService{
         int droneWeight,totalMedicationWeight = 0;
         LoadDrone ld,ld1 = null;
         DroneState checkDroneState = getSelectedDroneState(loadDrone.getSerialNumber());
-       // System.out.println("Drone state is " + checkDroneState);
+       //System.out.println("Drone state is " + checkDroneState);
         if(checkDroneState == DroneState.IDLE) {
             try
             {
@@ -200,7 +185,6 @@ public class DroneService implements IDroneService,IMedicationService{
                 int batteryLevel = getBatteryLevel(loadDrone.getSerialNumber());
                 //get drone weight from drones table
                 droneWeight = droneRepository.getDroneWeight(loadDrone.getSerialNumber());
-               // do {
                    for (int i = 0; i < loadDrone.getMedicineCode().size(); i++) {
                         int medicationWeight = getMedicationWeight(loadDrone.getMedicineCode().get(i));
                         totalMedicationWeight += medicationWeight;
@@ -265,8 +249,6 @@ public class DroneService implements IDroneService,IMedicationService{
                             newBatteryLevel, new Date(), new Date());
                     eventLogRepository.save(eReturning);
                 }
-              //  }
-              //  while (totalMedicationWeight < droneWeight);
             }
             catch(Exception e)
             {
@@ -278,8 +260,6 @@ public class DroneService implements IDroneService,IMedicationService{
             System.out.println("Drone with Serial Number: "+loadDrone.getSerialNumber() + "is currently engaged. Please try " +
                     "again later.");
         }
-
-       // return "Drone with Serial Number: "+serialNumber + "has been loaded successfully";
         return loaded;
     }
 
@@ -294,22 +274,6 @@ public class DroneService implements IDroneService,IMedicationService{
         {
             e.printStackTrace();
         }
-       /* try {
-            // call method from DronesRepository interface to get a list of loaded medication from  LoadedDrone table and store in loadedMedication;
-            //return loadedMedication.
-
-            Query query = em.createNativeQuery("select m.MedicationId from loadedDrones m where m.serialNumber = :serialNumber").setParameter("serialNumber", serialNumber);
-            List<Object[]> resultList = query.getResultList();
-
-            for (Object[] r : resultList) {
-                // add to the availableDrones variable to send back to client
-                loadedMedication.add((String) r[0]); // check this, might need to deserialize to get individual medication items.
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }*/
         return loadedMedication;
     }
 

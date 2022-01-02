@@ -45,5 +45,11 @@ public ResponseEntity Register(@RequestBody DroneRegistrationRequest drone)
     return ResponseEntity.ok(m);
 }
 
+@PostMapping("/getloadedmedication")
+    public ResponseEntity  getLoadedMedication(@RequestBody String serialNumber)
+    {
+        List<String> getMeds = droneService.getLoadedMedication(serialNumber);
+        return ResponseEntity.ok(getMeds);
+    }
 
 }
