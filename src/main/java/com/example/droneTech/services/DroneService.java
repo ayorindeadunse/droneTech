@@ -1,6 +1,7 @@
 package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
+import com.example.droneTech.RequestsAndResponses.GetMedicationRequest;
 import com.example.droneTech.RequestsAndResponses.LoadDroneRequest;
 import com.example.droneTech.RequestsAndResponses.MedicationRegistrationRequest;
 import com.example.droneTech.models.*;
@@ -276,17 +277,19 @@ public class DroneService implements IDroneService,IMedicationService{
         return loaded;
     }
 
-    public List<String> getLoadedMedication(String serialNumber)
+    public List<String> getLoadedMedication(GetMedicationRequest getMedicationRequest)
     {
         List<String> loadedMedication = new ArrayList<>();
         try
         {
-            loadedMedication = loadDroneRepository.getDroneAvailableMedication(serialNumber);
+           loadedMedication = loadDroneRepository.getDroneAvailableMedication(getMedicationRequest.getSerialNumber());
+           // if it's not null, run a for loop to retrieve the named list of all the medications loaded, and add to
+            // arraylist of type Medication.
         }
         catch(Exception e)
         {
             e.printStackTrace();
-        }
+       }
         return loadedMedication;
     }
 

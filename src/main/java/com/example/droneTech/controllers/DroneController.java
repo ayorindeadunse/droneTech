@@ -1,15 +1,13 @@
 package com.example.droneTech.controllers;
 
-import com.example.droneTech.RequestsAndResponses.ApiResponse;
-import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
-import com.example.droneTech.RequestsAndResponses.LoadDroneRequest;
-import com.example.droneTech.RequestsAndResponses.MedicationRegistrationRequest;
+import com.example.droneTech.RequestsAndResponses.*;
 import com.example.droneTech.models.Drone;
 import com.example.droneTech.models.LoadDrone;
 import com.example.droneTech.models.Medication;
 import com.example.droneTech.services.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,9 +44,9 @@ public ResponseEntity Register(@RequestBody DroneRegistrationRequest drone)
 }
 
 @PostMapping("/getloadedmedication")
-    public ResponseEntity  getLoadedMedication(@RequestBody String serialNumber)
+    public ResponseEntity getLoadedMedication(@RequestBody GetMedicationRequest getMedicationRequest)
     {
-        List<String> getMeds = droneService.getLoadedMedication(serialNumber);
+        List<String> getMeds = droneService.getLoadedMedication(getMedicationRequest);
         return ResponseEntity.ok(getMeds);
     }
 
