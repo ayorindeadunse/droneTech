@@ -1,9 +1,6 @@
 package com.example.droneTech.services;
 
-import com.example.droneTech.RequestsAndResponses.DroneRegistrationRequest;
-import com.example.droneTech.RequestsAndResponses.GetMedicationRequest;
-import com.example.droneTech.RequestsAndResponses.LoadDroneRequest;
-import com.example.droneTech.RequestsAndResponses.MedicationRegistrationRequest;
+import com.example.droneTech.RequestsAndResponses.*;
 import com.example.droneTech.models.*;
 import com.example.droneTech.repositories.*;
 import com.example.droneTech.util.Constants;
@@ -24,15 +21,17 @@ public class DroneService implements IDroneService,IMedicationService{
     private EventLogRepository eventLogRepository;
     private MedicationRepository medicationRepository;
     private LoadDroneRepository loadDroneRepository;
+    private MedicationRegisterRepository medicationRegisterRepository;
 
     public DroneService(DroneRepository droneRepository,DroneRegisterRepository droneRegisterRepository,
                         EventLogRepository eventLogRepository,MedicationRepository medicationRepository,
-                        LoadDroneRepository loadDroneRepository) {
+                        LoadDroneRepository loadDroneRepository,MedicationRegisterRepository medicationRegisterRepository) {
         this.droneRepository = droneRepository;
         this.droneRegisterRepository =  droneRegisterRepository;
         this.eventLogRepository = eventLogRepository;
         this.medicationRepository = medicationRepository;
         this.loadDroneRepository = loadDroneRepository;
+        this.medicationRegisterRepository = medicationRegisterRepository;
     }
 
     public Drone registerDrone(DroneRegistrationRequest drone) {
@@ -152,6 +151,21 @@ public class DroneService implements IDroneService,IMedicationService{
         return batteryLevel;
     }
 
+    public List<Integer> getDroneBatteryLevel(GetDroneBatteryLevelRequest getDroneBatteryLevelRequest)
+    {
+        List<Integer> batteryLevel = new ArrayList<>();
+        try
+        {
+            batteryLevel = eventLogRepository.getDroneBatteryLevell(getDroneBatteryLevelRequest.getSerialNumber());
+            System.out.println(batteryLevel);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return batteryLevel;
+    }
+
     // recalculate battery level
     public int recalculateBatteryLevel(int currentBatteryLevel, int medicineCount)
     {
@@ -262,6 +276,11 @@ public class DroneService implements IDroneService,IMedicationService{
                     EventLog eReturning = new EventLog(loadDrone.getSerialNumber(), DroneState.RETURNING,
                             newBatteryLevel, new Date(), new Date());
                     eventLogRepository.save(eReturning);
+
+                    // set back to idle
+                    EventLog eIdle = new EventLog(loadDrone.getSerialNumber(),DroneState.IDLE,newBatteryLevel,
+                            new Date(),new Date());
+                    eventLogRepository.save(eIdle);
                 }
             }
             catch(Exception e)
@@ -315,6 +334,10 @@ public class DroneService implements IDroneService,IMedicationService{
            Medication me1 = medicationRepository.save(me);
            if(me1.getId() > 0)
            {
+               //save in medication register
+               MedicationRegister medicationRegister = new MedicationRegister(me.getCode(),new Date(),new Date());
+               medicationRegisterRepository.save(medicationRegister);
+
                System.out.println("Medication with code " + medication.getCode() + "has been registered");
            }
         }
@@ -324,7 +347,7 @@ public class DroneService implements IDroneService,IMedicationService{
         }
         return me;
     }
-    public Drone getDroneDetails(String serialNumber)
+    /*public Drone getDroneDetails(String serialNumber)
     {
         Drone droneDetails = null;
         try
@@ -336,5 +359,5 @@ public class DroneService implements IDroneService,IMedicationService{
             e.printStackTrace();
         }
         return droneDetails;
-    }
+    }*/
 }

@@ -10,8 +10,8 @@ public class MedicationRegister {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Long Id; // primary key
-    @Column(name = "medicationId")
-    private Long MedicationId; //make this a unique field
+    @Column(name = "medicationCode")
+    private String medicationCode; //make this a unique field
     @Column(name = "createdDate")
     private Date createdDate;
     @Column(name = "modifiedDate")
@@ -20,18 +20,18 @@ public class MedicationRegister {
     public MedicationRegister() {
     }
 
-    public MedicationRegister(Long medicationId, Date createdDate, Date modifiedDate) {
-        MedicationId = medicationId;
+    public MedicationRegister(String medicationCode, Date createdDate, Date modifiedDate) {
+        this.medicationCode = medicationCode;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
 
-    public Long getMedicationId() {
-        return MedicationId;
+    public String getMedicationCode() {
+        return medicationCode;
     }
 
-    public void setMedicationId(Long medicationId) {
-        MedicationId = medicationId;
+    public void setMedicationCode(String medicationCode) {
+        medicationCode = medicationCode;
     }
 
     public Date getCreatedDate() {

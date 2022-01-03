@@ -17,14 +17,6 @@ public class LoadDroneRequest {
         this.serialNumber = serialNumber;
     }
 
-   /* public List<LoadDrone> getLoadDrone() {
-        return loadDrone;
-    }
-
-    public void setLoadDrone(List<LoadDrone> loadDrone) {
-        this.loadDrone = loadDrone;
-    }*/
-
     public List<String> getMedicineCode() {
         return medicineCode;
     }

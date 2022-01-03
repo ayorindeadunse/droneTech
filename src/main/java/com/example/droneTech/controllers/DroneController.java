@@ -7,10 +7,7 @@ import com.example.droneTech.models.Medication;
 import com.example.droneTech.services.DroneService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,5 +46,16 @@ public ResponseEntity Register(@RequestBody DroneRegistrationRequest drone)
         List<String> getMeds = droneService.getLoadedMedication(getMedicationRequest);
         return ResponseEntity.ok(getMeds);
     }
-
+    @GetMapping("/getavailabledrones") 
+    public ResponseEntity getAvailableDrones()
+    {
+        List<String> getDrones = droneService.getAvailableDrones();
+        return ResponseEntity.ok(getDrones);
+    }
+    @PostMapping("/getdronebatterylevel")
+    public ResponseEntity getDroneBatteryLevel(@RequestBody GetDroneBatteryLevelRequest getDroneBatteryLevelRequest)
+    {
+        List<Integer> droneBatteryLevelResponse = droneService.getDroneBatteryLevel(getDroneBatteryLevelRequest);
+        return ResponseEntity.ok(droneBatteryLevelResponse);
+    }
 }
