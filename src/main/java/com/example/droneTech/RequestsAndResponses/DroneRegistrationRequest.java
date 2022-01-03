@@ -26,10 +26,6 @@ public class DroneRegistrationRequest {
         return uniqueID;
     }
 
-    /*public String getSerialNumber() {
-        return serialNumber;
-    }*/
-
     public String setSerialNumber() {
 
       String serialNumber = createSerialNumber();

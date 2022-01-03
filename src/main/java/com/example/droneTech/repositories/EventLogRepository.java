@@ -1,7 +1,5 @@
 package com.example.droneTech.repositories;
 
-import com.example.droneTech.RequestsAndResponses.DroneBatteryLevelResponse;
-import com.example.droneTech.RequestsAndResponses.GetDroneBatteryLevelRequest;
 import com.example.droneTech.models.DroneState;
 import com.example.droneTech.models.EventLog;
 import org.springframework.data.jpa.repository.JpaRepository;

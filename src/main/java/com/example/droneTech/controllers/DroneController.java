@@ -22,40 +22,45 @@ public class DroneController {
 public ResponseEntity Register(@RequestBody DroneRegistrationRequest drone)
 {
     Drone d = droneService.registerDrone(drone);
-    return ResponseEntity.ok(d);
-   //return ResponseEntity.ok(new ApiResponse(true, "Drone registered successfully!" + d));
+    //return ResponseEntity.ok(d);
+   return ResponseEntity.ok(new ApiResponse(true, "Drone registered successfully!",d));
 }
 
 @PostMapping("/loaddrone")
     public ResponseEntity LoadDrone(@RequestBody LoadDroneRequest loadDrone)
 {
     List<LoadDrone> l = droneService.loadDrone(loadDrone);
-    return ResponseEntity.ok(l);
+    //return ResponseEntity.ok(l);
+    return ResponseEntity.ok(new ApiResponse(true,"Drone Loaded Successfully!",l));
 }
 
 @PostMapping("/registermedication")
     public ResponseEntity registerMedication(@RequestBody MedicationRegistrationRequest medication)
 {
     Medication m = droneService.registerMedication(medication);
-    return ResponseEntity.ok(m);
+    //return ResponseEntity.ok(m);
+    return ResponseEntity.ok(new ApiResponse(true,"Medicine Successfully registered.",m));
 }
 
 @PostMapping("/getloadedmedication")
     public ResponseEntity getLoadedMedication(@RequestBody GetMedicationRequest getMedicationRequest)
     {
         List<String> getMeds = droneService.getLoadedMedication(getMedicationRequest);
-        return ResponseEntity.ok(getMeds);
+       // return ResponseEntity.ok(getMeds);
+        return ResponseEntity.ok(new ApiResponse(true,"Medication Successfully  loaded",getMeds));
     }
     @GetMapping("/getavailabledrones") 
     public ResponseEntity getAvailableDrones()
     {
         List<String> getDrones = droneService.getAvailableDrones();
-        return ResponseEntity.ok(getDrones);
+       // return ResponseEntity.ok(getDrones);
+        return ResponseEntity.ok(new ApiResponse(true,"Available Drones Successfully retrieved",getDrones));
     }
     @PostMapping("/getdronebatterylevel")
     public ResponseEntity getDroneBatteryLevel(@RequestBody GetDroneBatteryLevelRequest getDroneBatteryLevelRequest)
     {
         List<Integer> droneBatteryLevelResponse = droneService.getDroneBatteryLevel(getDroneBatteryLevelRequest);
-        return ResponseEntity.ok(droneBatteryLevelResponse);
+      //  return ResponseEntity.ok(droneBatteryLevelResponse);
+        return ResponseEntity.ok(new ApiResponse(true,"Current Drone Battery Level Returned",droneBatteryLevelResponse));
     }
 }
