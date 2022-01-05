@@ -15,7 +15,7 @@ public class DroneRegistrationRequest {
   //  @Size(max = 100)
    // private String serialNumber;
     @NotBlank
-    @Size(max = 500)
+   // @Size(max = 500)
     private int droneWeight;
     @NotBlank
     private DroneModel droneModel;

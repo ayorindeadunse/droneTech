@@ -1,6 +1,7 @@
 package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.*;
+import com.example.droneTech.exceptions.DroneException;
 import com.example.droneTech.models.Drone;
 import com.example.droneTech.models.DroneState;
 import com.example.droneTech.models.LoadDrone;
@@ -15,7 +16,7 @@ public interface IDroneService {
     int getBatteryLevel(String serialNumber); //get the battery level for a particular drone from event log.
     List<Integer> getDroneBatteryLevel(GetDroneBatteryLevelRequest getDroneBatteryLevelRequest);
     List<String> getAvailableDrones(); //get the list of available drones from the event log. The serial numbers will be added to the ArrayList object.
-    List<LoadDrone> loadDrone(LoadDroneRequest loadDrone); //return the drone state after loading the drone with medication.
+    List<LoadDrone> loadDrone(LoadDroneRequest loadDrone) throws DroneException; //return the drone state after loading the drone with medication.
     List<String> getLoadedMedication(GetMedicationRequest getMedicationRequest); //get a list of loaded medication for a given drone
     Medication registerMedication(MedicationRegistrationRequest medication); //register a medication item in inventory and return the details; /** extra method **/
     //Drone getDroneDetails(String serialNumber); //Get spec details of a drone; /** extra method */

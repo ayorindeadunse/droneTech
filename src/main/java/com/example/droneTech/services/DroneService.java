@@ -1,6 +1,7 @@
 package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.*;
+import com.example.droneTech.exceptions.DroneException;
 import com.example.droneTech.models.*;
 import com.example.droneTech.repositories.*;
 import com.example.droneTech.util.Constants;
@@ -186,7 +187,7 @@ public class DroneService implements IDroneService,IMedicationService{
         return availableDrones;
     }
 
-    public List<LoadDrone> loadDrone(LoadDroneRequest loadDrone)
+    public List<LoadDrone> loadDrone(LoadDroneRequest loadDrone) throws DroneException
     {
         List<LoadDrone> loaded = new ArrayList<>();
         int droneWeight,totalMedicationWeight = 0;
@@ -198,18 +199,29 @@ public class DroneService implements IDroneService,IMedicationService{
             {
                 // Check drone battery level
                 int batteryLevel = getBatteryLevel(loadDrone.getSerialNumber());
-                //get drone weight from drones table
                 droneWeight = droneRepository.getDroneWeight(loadDrone.getSerialNumber());
                    for (int i = 0; i < loadDrone.getMedicineCode().size(); i++) {
                         int medicationWeight = getMedicationWeight(loadDrone.getMedicineCode().get(i));
                         totalMedicationWeight += medicationWeight;
                         // check battery level
                         if (batteryLevel < 25) {
-                            System.out.println("Drone battery level is  too low for this operation.");
+                            //System.out.println("Drone battery level is  too low for this operation.");
+                            LoadDrone l = new LoadDrone();
+                            l.setSerialNumber(loadDrone.getSerialNumber());
+                            l.setMedicineCode(loadDrone.getMedicineCode().get(i));
+                            l.setDroneState(DroneState.IDLE);
+                            l.setDateCreated(new Date());
+                            l.setDateModified(new Date());
+
+                            loaded.add(l);
+
+                            throw new DroneException("Drone battery level is  too low for this operation.");
+
                         }
                         else if(totalMedicationWeight > droneWeight)
                         {
-                            System.out.println("Drone cannot be loaded because the content is too heavy.");
+                            throw new DroneException("Drone cannot be loaded because the content is too heavy.");
+                          //  System.out.println("Drone cannot be loaded because the content is too heavy.");
                         }
                         else {
                             ld = new LoadDrone();
@@ -283,7 +295,7 @@ public class DroneService implements IDroneService,IMedicationService{
                     eventLogRepository.save(eIdle);
                 }
             }
-            catch(Exception e)
+            catch(DroneException e)
             {
                 e.printStackTrace();
             }
