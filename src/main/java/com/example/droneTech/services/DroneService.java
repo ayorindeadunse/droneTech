@@ -91,6 +91,20 @@ public class DroneService implements IDroneService,IMedicationService{
         }
         return d1;
     }
+    // get log history
+    public List<EventLog> getLogHistory()
+    {
+        List<EventLog> total = null;
+        try
+        {
+            total = eventLogRepository.findAll();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        return total;
+    }
 
     public Drone checkDroneExists(String serialNumber)
     {

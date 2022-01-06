@@ -2,10 +2,7 @@ package com.example.droneTech.controllers;
 
 import com.example.droneTech.RequestsAndResponses.*;
 import com.example.droneTech.exceptions.DroneException;
-import com.example.droneTech.models.Drone;
-import com.example.droneTech.models.DroneState;
-import com.example.droneTech.models.LoadDrone;
-import com.example.droneTech.models.Medication;
+import com.example.droneTech.models.*;
 import com.example.droneTech.services.DroneService;
 import com.example.droneTech.util.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpResponse;
 import java.util.List;
 
 
@@ -83,5 +81,17 @@ public class DroneController {
             return ResponseEntity.ok(new ApiResponse(true, "Current Drone Battery Level Returned", droneBatteryLevelResponse));
         }
         return ResponseEntity.ok(new ApiResponse(false, "No data retrieved", droneBatteryLevelResponse));
+    }
+
+    //get log history
+    @GetMapping("/api/droneTech/getEventLog")
+            public ResponseEntity getLogs()
+    {
+        List<EventLog> ev = droneService.getLogHistory();
+        if(ev != null)
+        {
+            return ResponseEntity.ok(new ApiResponse(true,"Log Entries Retrieved",ev));
+        }
+        return ResponseEntity.ok(new ApiResponse(false,"No data retrieved",ev));
     }
 }

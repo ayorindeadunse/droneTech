@@ -20,4 +20,5 @@ public interface EventLogRepository extends JpaRepository<EventLog,Long> {
 
     @Query(value = "SELECT DRONE_STATE FROM EVENTLOG WHERE SERIAL_NUMBER = ?1 ORDER BY DATE_CREATED DESC LIMIT 1", nativeQuery=true)
     DroneState getCurrentDroneState(String serialNumber);
+
 }

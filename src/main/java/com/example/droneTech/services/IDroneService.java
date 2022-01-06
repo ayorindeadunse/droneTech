@@ -2,10 +2,7 @@ package com.example.droneTech.services;
 
 import com.example.droneTech.RequestsAndResponses.*;
 import com.example.droneTech.exceptions.DroneException;
-import com.example.droneTech.models.Drone;
-import com.example.droneTech.models.DroneState;
-import com.example.droneTech.models.LoadDrone;
-import com.example.droneTech.models.Medication;
+import com.example.droneTech.models.*;
 
 import java.util.List;
 
@@ -22,4 +19,5 @@ public interface IDroneService {
     //Drone getDroneDetails(String serialNumber); //Get spec details of a drone; /** extra method */
     int recalculateBatteryLevel(int currentBatteryLevel, int medicineCount); /*assumed logic for drone battery level calculation */
     Drone checkDroneExists(String serialNumber);
+    List<EventLog> getLogHistory();
 }
