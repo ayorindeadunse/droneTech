@@ -89,9 +89,12 @@ public class DroneController {
     {
         List<EventLog> ev = droneService.getLogHistory();
         if(ev != null)
-        {
-            return ResponseEntity.ok(new ApiResponse(true,"Log Entries Retrieved",ev));
-        }
-        return ResponseEntity.ok(new ApiResponse(false,"No data retrieved",ev));
+      //  {
+         //   return ResponseEntity.ok(new ApiResponse(true,"Log Entries Retrieved",ev));
+            return ResponseEntity.ok(ev);
+     //   }
+      //  return ResponseEntity.ok(new ApiResponse(false,"No data retrieved",ev));
+        return ResponseEntity.ok(ev);
     }
+
 }
